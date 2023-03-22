@@ -2,7 +2,9 @@ package driver
 
 import (
 	"context"
+	"encoding/json"
 	"log"
+	"net/http"
 
 	"github.com/ojaswiii/MoMoney-Technical-Assignment/internal/models"
 	"go.mongodb.org/mongo-driver/bson"
@@ -34,12 +36,21 @@ func ConnectDB() *mongo.Client {
 	return client
 }
 
-func FindPost(id int) error {
+func FindPost(id int, w http.ResponseWriter) bool {
+	var flag bool = false
+
 	// Check if the post is already in the database
 	collection := client.Database("formo").Collection("posts")
 	filter := bson.M{"id": id}
 	var post models.Post
-	return collection.FindOne(context.Background(), filter).Decode(&post)
+	err := collection.FindOne(context.Background(), filter).Decode(&post)
+	if err == nil {
+		// If the post is already in the database, return it
+		json.NewEncoder(w).Encode(post)
+		flag = true
+		log.Println("Post found in database, no need for api call")
+	}
+	return flag
 }
 
 func SavePost(post models.Post) {

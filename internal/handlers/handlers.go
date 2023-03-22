@@ -26,11 +26,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	var post models.Post
 
 	// Check if the post is already in the database
-	err = driver.FindPost(id)
-	if err == nil {
-		// If the post is already in the database, return it
-		json.NewEncoder(w).Encode(post)
-		log.Println("Post found in database, no need for api call")
+	if driver.FindPost(id, w) {
 		return
 	}
 
@@ -38,11 +34,7 @@ func GetPost(w http.ResponseWriter, r *http.Request) {
 	defer mutex.Unlock()
 
 	// Check again if the post is in the database
-	err = driver.FindPost(id)
-	if err == nil {
-		// If the post is already in the database, return it
-		json.NewEncoder(w).Encode(post)
-		log.Println("Post found in database, no need for api call")
+	if driver.FindPost(id, w) {
 		return
 	}
 
