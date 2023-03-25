@@ -3,10 +3,12 @@ package driver
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/ojaswiii/MoMoney-Technical-Assignment/internal/models"
+	"github.com/spf13/viper"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,13 +17,18 @@ import (
 var client *mongo.Client
 
 func ConnectDB() *mongo.Client {
-	// // Load the .env file and get database URI
-	// godotenv.Load("config.env")
-	// dbURI := os.Getenv("DATABASE")
+	// Load the .env file and get database URI
+	viper.SetConfigName("config")
+	viper.AddConfigPath("../../")
+	er := viper.ReadInConfig()
+	if er != nil {
+		panic(fmt.Errorf("fatal error config file: %w", er))
+	}
+	dbURI := (viper.Get("DATABASE")).(string)
 
 	// Initialize MongoDB client
 	var err error
-	client, err = mongo.NewClient(options.Client().ApplyURI("mongodb+srv://ojaswisaxena14:FlSU8R3Cmy8hbBV9@cluster0.l30ec2b.mongodb.net/formo?retryWrites=true&w=majority"))
+	client, err = mongo.NewClient(options.Client().ApplyURI(dbURI))
 	if err != nil {
 		log.Fatal(err)
 	}

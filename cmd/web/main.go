@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+
 	// Create and connect to MongoDB client
 	driver.ConnectDB()
 
