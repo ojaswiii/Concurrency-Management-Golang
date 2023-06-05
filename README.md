@@ -1,6 +1,6 @@
-# MoMoney-Technical-Assignment
+# Concurrency Management using Golang
 
-This is the repository for the technical assignment for internship at MoMoney.
+A simple web server that fetches data from an API and saves it in a database so that the next time it's requested it can be served without querying the external API.
 
 - Built in Go version 1.19
 - Uses [gorilla/mux](https://github.com/gorilla/mux) for routing.
